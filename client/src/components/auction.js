@@ -1,4 +1,6 @@
-class Auction extends Component {
+import React from "react";
+
+class Auction extends React.Component {
   render() {
     return (
       <div>

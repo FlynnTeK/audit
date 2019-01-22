@@ -14,7 +14,8 @@ string domain;
 address owner;
 string state;
 address encryptorPublickey;
-string encryptorPrivateKey;
+string encryptorePrivateKey;
+address encryptorUnencryptedPrivateKey;
 string captchaImageURL;
 
 constructor(address publicKey, string encryptedPrivateKey) public
@@ -49,9 +50,18 @@ function logAction(string _address, string _eventType, string _elementID) public
 	analytics(_address, _eventType, _elementID);
 	}
 
-function websiteStats()
+function getDomain() public
   {
-
+  if (state == "auction")
+    {
+    return domain;
+    }
   }
 
+  function getOwner()
+    {
+    return owner;
+    }
+
+    
 }

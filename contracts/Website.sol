@@ -45,23 +45,39 @@ event analytics (
 	string elementID
 );
 
-function logAction(string _address, string _eventType, string _elementID) public
+function logAction(string _eventType, string _elementID) public
 	{
-	analytics(_address, _eventType, _elementID);
+	analytics(msg.sender, _eventType, _elementID);
 	}
 
-function getDomain() public
+function captchaAnswer(string _answer, string _newImageURL, string _newAnswerHash) public
   {
-  if (state == "auction")
-    {
-    return domain;
-    }
+  analytics(msg.sender, "captchaAnswer", _answer);
+  captchaImageURL = _newImageURL;
+  analytics(msg.sender, "captchaNew", _newAnswerHash);
   }
 
-  function getOwner()
+function getDomain() public
+  {
+    return domain;
+  }
+
+  function getOwner() public
     {
     return owner;
     }
 
-    
+//Auction - tracks highest bidder; transfers contract ownership; pays all parties involved their percentages
+uint highestBid;
+address highestBidder;
+
+function placeBid () Payable
+  {
+    require(
+            msg.value > highestBid,
+            "There already is a higher bid."
+        );
+    highestBid = msg.amount;
+    highestBidder = msg.sender;
+  }
 }

@@ -15,7 +15,6 @@ address owner;
 string state;
 address encryptorPublickey;
 string encryptorePrivateKey;
-address encryptorUnencryptedPrivateKey;
 string captchaImageURL;
 
 constructor(address publicKey, string encryptedPrivateKey) public
@@ -24,20 +23,6 @@ encryptorPublickey = publicKey;
 encryptorPrivateKey = encryptedPrivateKey;
 owner = msg.sender;
 }
-
-function set(uint x) public {
-
-  storedData = x;
-
-  }
-
-
-
- function get() public view returns (uint) {
-
- return storedData;
-
-  }
 
 event analytics (
 	string address,
@@ -78,10 +63,12 @@ function getDomain() public
     }
 //Auction - tracks highest bidder; transfers contract ownership; pays all parties involved their percentages
 uint auctionEnd;
+address encryptorUnencryptedPrivateKey;
 
-function startAuction(uint biddingTime) public
+function startAuction(uint biddingTime, address unencryptedPrivateKey) public
   {
   require(msg.sender === owner);
+  encryptorUnencryptedPrivateKey = unencryptedPrivateKey;
   auctionEnd = now + biddingTime;
   state = "auction";
   }
@@ -182,7 +169,8 @@ function lastPayout() public Payable
   uint totalSecondsInFourWeeks = (60 * 60 * 24 * 7);
 
   require(timeAfterAuctionEnded >= totalSecondsInFourWeeks, "It has not been four weeks yet.");
-
+  transferAmount = highestBid * 0.58;
+previousOwner.transfer(transferAmount);
 
   }
 

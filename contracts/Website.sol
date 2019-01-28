@@ -158,7 +158,8 @@ event AuctionEnded (
 
         // 1. Conditions
         require(now >= auctionEnd, "Auction not yet ended.");
-        require(state !== "sold", "auctionEnd has already been called.");
+        require(state === "auction", "")
+        //require(state !== "sold", "auctionEnd has already been called.");
 
         // 2. Effects
         state = "sold";
@@ -169,4 +170,13 @@ event AuctionEnded (
         // 3. Interaction
         beneficiary.transfer(highestBid);
     }
+}
+
+
+string encryptedCredentials;
+
+function setEncryptedCredentials()
+{
+  require(msg.sender === previousOwner, "only the previous owner can pass along the credentials");
+
 }

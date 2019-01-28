@@ -158,7 +158,7 @@ event AuctionEnded (
 
         // 1. Conditions
         require(now >= auctionEnd, "Auction not yet ended.");
-        require(state === "auction", "")
+        require(state === "auction", "Auction end has already been called.");
         //require(state !== "sold", "auctionEnd has already been called.");
 
         // 2. Effects
@@ -168,15 +168,33 @@ event AuctionEnded (
         emit AuctionEnded(highestBidder, highestBid);
 
         // 3. Interaction
-        beneficiary.transfer(highestBid);
+        uint transferAmount = highestBid * 0.4
+        previousOwner.transfer(transferAmount);
     }
 }
 
 
+function lastPayout() public Payable
+  {
+  require(state === "sold", "Auction not yet ended.");
+
+  uint timeAfterAuctionEnded = now - auctionEnd;
+  uint totalSecondsInFourWeeks = (60 * 60 * 24 * 7);
+
+  require(timeAfterAuctionEnded >= totalSecondsInFourWeeks, "It has not been four weeks yet.");
+
+
+  }
+
 string encryptedCredentials;
 
-function setEncryptedCredentials()
+function setEncryptedCredentials(string _encryptedCredentials) public
 {
-  require(msg.sender === previousOwner, "only the previous owner can pass along the credentials");
+require(msg.sender === previousOwner, "only the previous owner can pass along the credentials");
+encryptedCredentials = _encryptedCredentials;
+}
 
+function getEncryptedCredentials() public
+{
+  return encryptedCredentials;
 }
